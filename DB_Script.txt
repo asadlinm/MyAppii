@@ -1,0 +1,22 @@
+create table LogTime
+(
+	id int identity primary key,
+	INSERT_DATE datetime
+)
+
+create table Log
+(
+	id int identity primary key,
+	PARENT_ID int not null,
+	[Value] nvarchar(500)
+)
+go
+create procedure InsertLog
+@value nvarchar(500)
+AS 
+Begin
+	declare @logTimeId int;
+	insert into LogTime (INSERT_DATE) values (GETDATE())
+	select @logTimeId = MAX(id) from LogTime
+	insert into Log (PARENT_ID, [Value]) values (@logTimeId, @value)
+end
